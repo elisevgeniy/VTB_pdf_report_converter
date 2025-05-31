@@ -22,33 +22,7 @@ namespace VTBpdfReportConverter.Converter
             using (PdfDocument document = PdfDocument.Open(filepath, new ParsingOptions() { ClipPaths = true }))
             {
                 Accaunt = ParseAccaunt(document);
-
-                //for (int i = 1; i <= document.NumberOfPages; i++)
-                //{
-                //    PageArea page = ObjectExtractor.Extract(document, i);
-
-                //    IExtractionAlgorithm ea = new SpreadsheetExtractionAlgorithm();
-                //    IReadOnlyList<Table> tables = ea.Extract(page);
-
-                //    result.AppendLine($"Table count: {tables.Count}");
-
-                //    foreach (var table in tables)
-                //    {
-                //        result.AppendLine($"Table rows: {table.RowCount}, columns: {table.ColumnCount}");
-                //        for (int r = 0; r < table.RowCount; r++)
-                //        {
-                //            for (int c = 0; c < table.ColumnCount; c++)
-                //            {
-                //                result.Append($"{table[r, c].ToString().Replace("\r", "")}\t\t\t");
-                //            }
-                //            result.AppendLine();
-                //            result.AppendLine();
-                //        }
-                //        result.AppendLine();
-                //        result.AppendLine();
-                //        result.AppendLine();
-                //    }
-                //}
+                Accaunt.Transactions.AddRange(ParseTransactions(document));
             }
 
             Trace.WriteLine(Accaunt.ToString());
@@ -127,6 +101,48 @@ namespace VTBpdfReportConverter.Converter
             }
 
             return new Accaunt(FIO, accauntNumber, startPeriod, endPeriod, startBalance, endBalance);
+        }
+
+        private List<Transaction> ParseTransactions(PdfDocument document)
+        {
+            var transactions = new List<Transaction>();
+
+            for (int i = 1; i <= document.NumberOfPages; i++)
+            {
+                PageArea page = ObjectExtractor.Extract(document, i);
+
+                IExtractionAlgorithm ea = new SpreadsheetExtractionAlgorithm();
+                IReadOnlyList<Table> tables = ea.Extract(page);
+
+                Table table;
+                int r = 2;
+                if (i == 1)
+                {
+                    table = tables[1];
+                    r = 4;
+                } else
+                {
+                    table = tables[0];
+                }
+
+                for (; r < table.RowCount; r++)
+                {
+                    if (
+                        DateTime.TryParse(table[r, 0].ToString().Replace("\r", " ").Replace('.', '-'), out DateTime dateTime) &&
+                        DateOnly.TryParse(table[r, 1].ToString(), out DateOnly bankExecuteDate) &&
+                        double.TryParse(table[r, 2].ToString().Replace(" RUB", "").Replace(",","").Replace('.',','), out double amount) &&
+                        double.TryParse(table[r, 5].ToString().Replace(" RUB", "").Replace(",", "").Replace('.', ','), out double commission)
+                        )
+                    {
+                        transactions.Add(new Transaction(dateTime, bankExecuteDate, amount, commission, table[r, 6].ToString()));
+                    } else
+                    {
+                        throw new Exception($"Transaction parse error, page {i}, row {r}");
+                    }
+                } 
+            }
+
+            return transactions;
         }
     }
 }

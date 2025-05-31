@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace VTBpdfReportConverter.Models
@@ -14,13 +17,23 @@ namespace VTBpdfReportConverter.Models
         public double Commission { get; }
         public string Memo { get; }
 
-        Transaction(DateTime dateTime, DateOnly bankExecuteDate, double amount, double commission, string memo)
+        public Transaction(DateTime dateTime, DateOnly bankExecuteDate, double amount, double commission, string memo)
         {
             DateTime = dateTime;
             BankExecuteDate = bankExecuteDate;
             Amount = amount;
             Commission = commission;
             Memo = memo ?? throw new ArgumentNullException(nameof(memo));
+        }
+
+        public override string? ToString()
+        {
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions
+            {
+                WriteIndented = true,  // Включаем красивое форматирование
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,  // Игнорируем null значения
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All) // Запрет кодирования юникода
+            });
         }
     }
 }
