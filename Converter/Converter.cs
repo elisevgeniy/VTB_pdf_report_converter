@@ -21,14 +21,14 @@ namespace VTBpdfReportConverter.Converter
         {
             using (PdfDocument document = PdfDocument.Open(filepath, new ParsingOptions() { ClipPaths = true }))
             {
-                Accaunt = ParseAccaunt(document);
+                Accaunt = ParseAccount(document);
                 Accaunt.Transactions.AddRange(ParseTransactions(document));
             }
 
             Trace.WriteLine(Accaunt.ToString());
         }
 
-        private Accaunt ParseAccaunt(PdfDocument document)
+        private static Accaunt ParseAccount(PdfDocument document)
         {
             var words = document.GetPage(1).GetWords().ToArray();
             int words_index = 0;
@@ -103,7 +103,7 @@ namespace VTBpdfReportConverter.Converter
             return new Accaunt(FIO, accauntNumber, startPeriod, endPeriod, startBalance, endBalance);
         }
 
-        private List<Transaction> ParseTransactions(PdfDocument document)
+        private static List<Transaction> ParseTransactions(PdfDocument document)
         {
             var transactions = new List<Transaction>();
 
