@@ -2,27 +2,27 @@
 using Tabula;
 using UglyToad.PdfPig;
 using VTBpdfReportConverter.Models;
-using System.Diagnostics;
 using System.Xml.Linq;
 using Transaction = VTBpdfReportConverter.Models.Transaction;
 
 namespace VTBpdfReportConverter.Converter
 {
-    internal class Converter
+    internal class ReportConverter
     {
-        public Converter() { }
-
         private Accaunt Accaunt { get; set; }
+        
+        public ReportConverter(string pdfFilepath)
+        {
+            ReadPdfFile(pdfFilepath);
+        }
 
-        public void ReadPdfFile(string filepath)
+        private void ReadPdfFile(string filepath)
         {
             using (PdfDocument document = PdfDocument.Open(filepath, new ParsingOptions() { ClipPaths = true }))
             {
                 Accaunt = ParseAccount(document);
                 Accaunt.Transactions.AddRange(ParseTransactions(document));
             }
-
-            Trace.WriteLine(Accaunt.ToString());
         }
 
         public string GetOFX()

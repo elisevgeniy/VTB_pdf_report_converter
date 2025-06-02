@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Tabula.Detectors;
 using Tabula.Extractors;
 using Tabula;
+using VTBpdfReportConverter.Converter;
 
 namespace VTBpdfTOcsv
 {
@@ -28,38 +29,8 @@ namespace VTBpdfTOcsv
 
             if (!File.Exists(pdfFilepath)) return;
 
-            using (PdfDocument document = PdfDocument.Open(pdfFilepath, new ParsingOptions() { ClipPaths = true }))
-            {
-                for (int i = 1; i <= document.NumberOfPages; i++)
-                {
-                    result.AppendLine($"Page #{i}");
-                    result.AppendLine();
-
-                    PageArea page = ObjectExtractor.Extract(document, i);
-
-                    IExtractionAlgorithm ea = new SpreadsheetExtractionAlgorithm();
-                    IReadOnlyList<Table> tables = ea.Extract(page);
-
-                    result.AppendLine($"Table count: {tables.Count}");
-
-                    foreach (var table in tables)
-                    {
-                        result.AppendLine($"Table rows: {table.RowCount}, columns: {table.ColumnCount}");
-                        for (int r = 0; r < table.RowCount; r++)
-                        {
-                            for (int c = 0; c < table.ColumnCount; c++)
-                            {
-                                result.Append($"{table[r, c].ToString().Replace("\r", "")}\t\t\t");
-                            }
-                            result.AppendLine();
-                            result.AppendLine();
-                        }
-                        result.AppendLine();
-                        result.AppendLine();
-                        result.AppendLine();
-                    }
-                }
-            }
+            ReportConverter reportConverter = new ReportConverter(pdfFilepath);
+            result.AppendLine(reportConverter.GetOFX());
 
             OutputTextBox.Text = result.ToString();
         }
