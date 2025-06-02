@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using Tabula.Extractors;
 using Tabula;
 using UglyToad.PdfPig;
@@ -95,11 +96,12 @@ namespace VTBpdfReportConverter.Converter
 
 
             string FIO = "";
+            StringBuilder sb = new StringBuilder();
             while (!words[words_index].Text.Equals("Номер")){
-                FIO += words[words_index].Text + " ";
+                sb.Append(words[words_index].Text + " ");
                 words_index++;
             }
-            FIO = FIO.Trim();
+            FIO = sb.ToString().Trim();
 
 
             decimal accauntNumber;
