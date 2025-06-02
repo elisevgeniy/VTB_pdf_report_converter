@@ -28,8 +28,6 @@ namespace VTBpdfReportConverter.Converter
 
         public string GetOFX()
         {
-            if (Accaunt == null) throw new Exception("Accaunt is null");
-            
             var output = new XDocument(
                 new XProcessingInstruction("OFX", "OFXHEADER=\"200\" VERSION=\"220\" SECURITY=\"NONE\" OLDFILEUID=\"NONE\" NEWFILEUID=\"NONE\""),
                 new XElement("OFX",
@@ -61,8 +59,6 @@ namespace VTBpdfReportConverter.Converter
 
         public void SaveOFXToFile(string ofxFilepath)
         {
-            if (Accaunt == null) throw new Exception("Accaunt is null");
-            
             var output = new XDocument(
                 new XProcessingInstruction("OFX", "OFXHEADER=\"200\" VERSION=\"220\" SECURITY=\"NONE\" OLDFILEUID=\"NONE\" NEWFILEUID=\"NONE\""),
                 new XElement("OFX",
