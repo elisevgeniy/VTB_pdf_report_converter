@@ -2,12 +2,6 @@
 using System.Text;
 using System.Windows;
 using Microsoft.Win32;
-using UglyToad.PdfPig.Content;
-using UglyToad.PdfPig;
-using System.Xml.Linq;
-using Tabula.Detectors;
-using Tabula.Extractors;
-using Tabula;
 using VTBpdfReportConverter.Converter;
 
 namespace VTBpdfTOcsv
@@ -31,6 +25,7 @@ namespace VTBpdfTOcsv
 
             ReportConverter reportConverter = new ReportConverter(pdfFilepath);
             result.AppendLine(reportConverter.GetOFX());
+            reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", ".oxf"));
 
             OutputTextBox.Text = result.ToString();
         }
