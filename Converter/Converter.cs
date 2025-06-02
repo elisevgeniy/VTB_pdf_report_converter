@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tabula.Extractors;
+﻿using Tabula.Extractors;
 using Tabula;
 using UglyToad.PdfPig;
 using VTBpdfReportConverter.Models;
 using System.Diagnostics;
+using System.Xml.Linq;
+using Transaction = VTBpdfReportConverter.Models.Transaction;
 
 namespace VTBpdfReportConverter.Converter
 {
@@ -28,6 +25,39 @@ namespace VTBpdfReportConverter.Converter
             Trace.WriteLine(Accaunt.ToString());
         }
 
+        public string GetOFX()
+        {
+            if (Accaunt == null) throw new Exception("Accaunt is null");
+            
+            var output = new XDocument(
+                new XProcessingInstruction("OFX", "OFXHEADER=\"200\" VERSION=\"220\" SECURITY=\"NONE\" OLDFILEUID=\"NONE\" NEWFILEUID=\"NONE\""),
+                new XElement("OFX",
+                    new XElement("BANKMSGSRSV1",
+                        new XElement("STMTTRNRS",
+                            new XElement("STMTRS",
+                                new XElement("CURDEF", "RUB"),
+                                new XElement("BANKACCTFROM",
+                                    new XElement("BANKID", "VTB"),
+                                    new XElement("ACCTID", Accaunt.Number),
+                                    new XElement("ACCTTYPE", "UNKNOWN")
+                                ),
+                                new XElement("BANKTRANLIST",
+                                    from transaction in Accaunt.Transactions
+                                    select new XElement("STMTTRN",
+                                        new XElement("DTPOSTED", transaction.BankExecuteDate.ToDateTime(new TimeOnly(0,0)).ToString("yyyyMMddHHmmss")),
+                                        new XElement("TRNAMT", transaction.Amount),
+                                        new XElement("MEMO", transaction.Memo)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            
+            return output.ToString();
+        }
+        
         private static Accaunt ParseAccount(PdfDocument document)
         {
             var words = document.GetPage(1).GetWords().ToArray();
