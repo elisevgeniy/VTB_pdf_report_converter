@@ -35,7 +35,7 @@ namespace VTBpdfReportConverter.Converter
                     new XElement("BANKMSGSRSV1",
                         new XElement("STMTTRNRS",
                             new XElement("STMTRS",
-                                new XElement("CURDEF", "RUB"),
+                                new XElement("CURDEF", Accaunt.Currency),
                                 new XElement("BANKACCTFROM",
                                     new XElement("BANKID", "VTB"),
                                     new XElement("ACCTID", Accaunt.Number),
@@ -106,6 +106,7 @@ namespace VTBpdfReportConverter.Converter
                 throw new Exception("Не удалось спарсить даты выписки");
             }
 
+            string currency;
             double startBalance;
             double endBalance;
             while (!words[words_index].Text.Equals("периода"))
@@ -113,7 +114,9 @@ namespace VTBpdfReportConverter.Converter
                 words_index++;
             }
             words_index++;
+            
             string startBalanceStr = words[words_index].Text.Replace(",", "").Replace(".", ",");
+            currency = words[words_index + 1].Text;
             while (!words[words_index].Text.Equals("периода"))
             {
                 words_index++;
@@ -130,7 +133,7 @@ namespace VTBpdfReportConverter.Converter
                 throw new Exception("Не удалось спарсить баланс");
             }
 
-            return new Accaunt(FIO, accauntNumber, startPeriod, endPeriod, startBalance, endBalance);
+            return new Accaunt(FIO, accauntNumber, startPeriod, endPeriod, startBalance, endBalance, currency);
         }
 
         private static List<Transaction> ParseTransactions(PdfDocument document)

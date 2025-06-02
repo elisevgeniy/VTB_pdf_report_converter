@@ -12,10 +12,11 @@ namespace VTBpdfReportConverter.Models
         public DateOnly PeriodEnd { get; }
         public double BalanceAtStart { get; }
         public double BalanceAtEnd { get; }
+        public string Currency { get; }
 
         public List<Transaction> Transactions { get; }
 
-        public Accaunt(string owner, decimal number, DateOnly periodStart, DateOnly periodEnd, double balanceAtStart, double balanceAtEnd)
+        public Accaunt(string owner, decimal number, DateOnly periodStart, DateOnly periodEnd, double balanceAtStart, double balanceAtEnd, string currency)
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             Number = number;
@@ -23,6 +24,7 @@ namespace VTBpdfReportConverter.Models
             PeriodEnd = periodEnd;
             BalanceAtStart = balanceAtStart;
             BalanceAtEnd = balanceAtEnd;
+            Currency = currency;
             Transactions = new List<Transaction>();
         }
 
