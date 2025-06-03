@@ -177,6 +177,8 @@ namespace VTBpdfReportConverter.Converter
                     IExtractionAlgorithm ea = new SpreadsheetExtractionAlgorithm();
                     IReadOnlyList<Table> tables = ea.Extract(page);
 
+                    if (tables.Count == 0) continue;
+                    
                     Table table;
                     int r = 2;
                     if (i == 1)
