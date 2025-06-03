@@ -28,7 +28,7 @@ namespace VTBpdfReportConverter
             {
                 ReportConverter reportConverter = new ReportConverter(pdfFilepath);
                 result.AppendLine(reportConverter.GetOFX());
-                string saveOfxToFile = reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", ".oxf"));
+                string saveOfxToFile = reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", ".ofx"));
 
                 OutputTextBox.Text = result.ToString();
                 OutputLabel.Text = $"Файл в OFX формате сохранён по пути: {saveOfxToFile}";
