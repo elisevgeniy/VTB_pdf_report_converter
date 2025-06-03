@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1000">
+        Title="Конвертор PDF отчётов по операциям ВТБ" Height="800" Width="1000" MinWidth="500" MinHeight="500">
     <Grid VerticalAlignment="Top" Margin="16,16,16,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
