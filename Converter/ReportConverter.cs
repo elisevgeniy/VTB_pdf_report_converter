@@ -60,33 +60,9 @@ namespace VTBpdfReportConverter.Converter
 
         public string SaveOFXToFile(string ofxFilepath)
         {
-            var output = new XDocument(
-                new XProcessingInstruction("OFX", "OFXHEADER=\"200\" VERSION=\"220\" SECURITY=\"NONE\" OLDFILEUID=\"NONE\" NEWFILEUID=\"NONE\""),
-                new XElement("OFX",
-                    new XElement("BANKMSGSRSV1",
-                        new XElement("STMTTRNRS",
-                            new XElement("STMTRS",
-                                new XElement("CURDEF", Accaunt.Currency),
-                                new XElement("BANKACCTFROM",
-                                    new XElement("BANKID", "VTB"),
-                                    new XElement("ACCTID", Accaunt.Number),
-                                    new XElement("ACCTTYPE", "UNKNOWN")
-                                ),
-                                new XElement("BANKTRANLIST",
-                                    from transaction in Accaunt.Transactions
-                                    select new XElement("STMTTRN",
-                                        new XElement("DTPOSTED", transaction.BankExecuteDate.ToDateTime(new TimeOnly(0,0)).ToString("yyyyMMddHHmmss")),
-                                        new XElement("TRNAMT", transaction.Amount),
-                                        new XElement("MEMO", transaction.Memo)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            );
+            var output = GetOFX();
             
-            File.CreateText(ofxFilepath).Write(output.ToString());
+            File.CreateText(ofxFilepath).Write(output);
 
             return ofxFilepath;
         }
