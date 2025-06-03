@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows;
 using Microsoft.Win32;
 using VTBpdfReportConverter.Converter;
+using VTBpdfReportConverter.Exceptions;
 
 namespace VTBpdfReportConverter
 {
@@ -23,12 +24,19 @@ namespace VTBpdfReportConverter
 
             if (!File.Exists(pdfFilepath)) return;
 
-            ReportConverter reportConverter = new ReportConverter(pdfFilepath);
-            result.AppendLine(reportConverter.GetOFX());
-            string saveOfxToFile = reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", ".oxf"));
+            try
+            {
+                ReportConverter reportConverter = new ReportConverter(pdfFilepath);
+                result.AppendLine(reportConverter.GetOFX());
+                string saveOfxToFile = reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", ".oxf"));
 
-            OutputTextBox.Text = result.ToString();
-            OutputLabel.Text = $"Файл в OFX формате сохранён по пути: {saveOfxToFile}";
+                OutputTextBox.Text = result.ToString();
+                OutputLabel.Text = $"Файл в OFX формате сохранён по пути: {saveOfxToFile}";
+            }
+            catch (ConvertException ce)
+            {
+                OutputLabel.Text = $"Ошибка конвертации: {ce.Message}";
+            }
         }
 
         private void Openfile_Click(object sender, RoutedEventArgs e)
