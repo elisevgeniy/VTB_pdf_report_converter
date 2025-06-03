@@ -4,7 +4,7 @@ using System.Windows;
 using Microsoft.Win32;
 using VTBpdfReportConverter.Converter;
 
-namespace VTBpdfTOcsv
+namespace VTBpdfReportConverter
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

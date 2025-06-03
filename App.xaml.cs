@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace VTBpdfTOcsv
+namespace VTBpdfReportConverter
 {
     /// <summary>
     /// Interaction logic for App.xaml
