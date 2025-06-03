@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VTBpdfTOcsv"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1000">
     <Grid VerticalAlignment="Top" Margin="16,16,16,16">
@@ -11,6 +10,7 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="0 8 8 0">
             <Grid.ColumnDefinitions>
@@ -24,7 +24,7 @@
 
         <Button Name="ProcessBtn" Grid.Row="1" Content="Обработать" HorizontalAlignment="Stretch" Margin="0 8 8 0" Click="ProcessBtn_Click"/>
         <TextBox Name="OutputTextBox" Grid.Row="2" TextWrapping="NoWrap" MinHeight="100" Margin="0,8,8,8" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto"/>
-
+        <TextBox Grid.Row="3" Name="OutputLabel" BorderThickness="0,0,0,0"  IsReadOnly="True" IsReadOnlyCaretVisible="True"></TextBox>
 
     </Grid>
 </Window>

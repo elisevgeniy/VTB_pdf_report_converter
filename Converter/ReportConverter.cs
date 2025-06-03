@@ -58,7 +58,7 @@ namespace VTBpdfReportConverter.Converter
             return output.ToString();
         }
 
-        public void SaveOFXToFile(string ofxFilepath)
+        public string SaveOFXToFile(string ofxFilepath)
         {
             var output = new XDocument(
                 new XProcessingInstruction("OFX", "OFXHEADER=\"200\" VERSION=\"220\" SECURITY=\"NONE\" OLDFILEUID=\"NONE\" NEWFILEUID=\"NONE\""),
@@ -87,6 +87,8 @@ namespace VTBpdfReportConverter.Converter
             );
             
             File.CreateText(ofxFilepath).Write(output.ToString());
+
+            return ofxFilepath;
         }
         
         private static Accaunt ParseAccount(PdfDocument document)
