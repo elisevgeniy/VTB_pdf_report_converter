@@ -47,8 +47,7 @@ namespace VTBpdfReportConverter.Converter
                                     from transaction in Accaunt.Transactions
                                     select new XElement("STMTTRN",
                                         new XElement("DTPOSTED",
-                                            transaction.BankExecuteDate.ToDateTime(new TimeOnly(0, 0))
-                                                .ToString("yyyyMMddHHmmss")),
+                                            transaction.DateTime.ToString("yyyyMMddHHmmss")),
                                         new XElement("TRNAMT", transaction.Amount),
                                         new XElement("MEMO", transaction.Memo)
                                     )
