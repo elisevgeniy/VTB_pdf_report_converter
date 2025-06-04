@@ -65,8 +65,11 @@ namespace VTBpdfReportConverter.Converter
         {
             var output = GetOFX();
 
-            File.CreateText(ofxFilepath).Write(output);
-
+            using (var file = File.CreateText(ofxFilepath))
+            {
+                file.Write(output);
+            }
+            
             return ofxFilepath;
         }
 
