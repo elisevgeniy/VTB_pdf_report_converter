@@ -73,6 +73,7 @@ namespace VTBpdfReportConverter
 
         private void Openfile_Click(object sender, RoutedEventArgs e)
         {
+            ResetUI();
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "PDF файл|*.pdf";
             openFileDialog.CheckFileExists = true;
