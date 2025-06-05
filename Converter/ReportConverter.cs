@@ -44,7 +44,7 @@ namespace VTBpdfReportConverter.Converter
                                     new XElement("ACCTTYPE", "UNKNOWN")
                                 ),
                                 new XElement("BANKTRANLIST",
-                                    from transaction in Accaunt.Transactions
+                                    from transaction in Accaunt.Transactions orderby transaction.DateTime
                                     select new XElement("STMTTRN",
                                         new XElement("DTPOSTED",
                                             transaction.DateTime.ToString("yyyyMMddHHmmss")),
