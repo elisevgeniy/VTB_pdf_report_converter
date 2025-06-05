@@ -12,7 +12,7 @@
             <RowDefinition Height="60"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="0 8 8 0">
             <Grid.ColumnDefinitions>
@@ -21,27 +21,27 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Name="Filepath" Grid.Column="0" Text="" HorizontalAlignment="Stretch" Margin="0 0 8 0"/>
-            <Button Name="Openfile" Grid.Column="1" Content="Открыть pdf" HorizontalAlignment="Stretch" Margin="8 0 0 0" Click="Openfile_Click"/>
+            <Button Grid.Column="1" Content="Открыть pdf" HorizontalAlignment="Stretch" Margin="8 0 0 0" Click="Openfile_Click"/>
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <Label>Формат конвертации</Label>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 8 8 0">
-                <RadioButton GroupName="rbOutputFormat" IsChecked="True" Checked="ToggleButton_OnChecked" >OFX</RadioButton>
-                <RadioButton GroupName="rbOutputFormat" Checked="ToggleButton_OnChecked" >CSV</RadioButton>
-                <RadioButton GroupName="rbOutputFormat" Checked="ToggleButton_OnChecked" >QIF</RadioButton>
+                <RadioButton GroupName="rbOutputFormat" IsChecked="True" Checked="ToggleButton_OnChecked" Margin="8 0 8 0">OFX</RadioButton>
+                <RadioButton GroupName="rbOutputFormat" Checked="ToggleButton_OnChecked"  Margin="8 0 8 0">CSV</RadioButton>
+                <RadioButton GroupName="rbOutputFormat" Checked="ToggleButton_OnChecked"  Margin="8 0 8 0">QIF</RadioButton>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Vertical">
             <Label>Опции обработки</Label>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 8 8 0">
-                <CheckBox Name="cbOutput" IsChecked="True">Вывести в окно программы</CheckBox>
-                <CheckBox Name="cbFile">Сохранить в файл</CheckBox>
+                <CheckBox Name="cbOutput" IsChecked="True"  Margin="8 0 8 0">Вывести в окно программы</CheckBox>
+                <CheckBox Name="cbFile"  Margin="8 0 8 0">Сохранить в файл</CheckBox>
             </StackPanel>
         </StackPanel>
-        <Button Name="ProcessBtn" Grid.Row="3" Content="Обработать" HorizontalAlignment="Stretch" Margin="0 8 8 0" Click="ProcessBtn_Click"/>
+        <Button Grid.Row="3" Content="Обработать" HorizontalAlignment="Stretch" Margin="0 8 8 0" Click="ProcessBtn_Click"/>
         <TextBox Name="OutputTextBox" Grid.Row="4" Visibility="Collapsed" TextWrapping="NoWrap" MinHeight="100" Margin="0,8,8,8" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto"/>
-        <TextBox Grid.Row="5" Name="OutputLabel" BorderThickness="0,0,0,0"  IsReadOnly="True" IsReadOnlyCaretVisible="True"></TextBox>
+        <TextBox Grid.Row="5" Name="OutputLabel" BorderThickness="0,0,0,0"  IsReadOnly="True" IsReadOnlyCaretVisible="True"  Margin="0 16 0 0"></TextBox>
 
     </Grid>
 </Window>
