@@ -49,6 +49,7 @@ namespace VTBpdfReportConverter.Converter
                                         new XElement("DTPOSTED",
                                             transaction.DateTime.ToString("yyyyMMddHHmmss")),
                                         new XElement("TRNAMT", transaction.Amount),
+                                        new XElement("NAME", transaction.Payee),
                                         new XElement("MEMO", transaction.Memo)
                                     )
                                 )
@@ -208,8 +209,16 @@ namespace VTBpdfReportConverter.Converter
                                 out double commission)
                         )
                         {
-                            transactions.Add(new Transaction(dateTime, bankExecuteDate, amount, commission,
-                                table[r, 6].ToString()));
+                            string memo = table[r, 6].ToString();
+                            if (TryParsePayee(memo, out string payee))
+                            {
+                                transactions.Add(new Transaction(dateTime, bankExecuteDate, amount, commission, memo, payee));
+                            }
+                            else
+                            {
+                                transactions.Add(new Transaction(dateTime, bankExecuteDate, amount, commission, memo));
+                            }
+                            
                         }
                         else
                         {
@@ -224,6 +233,18 @@ namespace VTBpdfReportConverter.Converter
             {
                 throw new ConvertException(ex.Message);
             }
+        }
+
+        private static bool TryParsePayee(string memo, out string payee)
+        {
+            payee = "";
+            if (memo.StartsWith("Оплата товаров и услуг. "))
+            {
+                var payeeRange = new Range(24, memo.Replace("\r_\r"," ").Replace("\r"," ").IndexOf("по карте"));
+                payee = memo[payeeRange].Trim().Replace("\r"," ");
+                return true;
+            }
+            return false;
         }
     }
 }

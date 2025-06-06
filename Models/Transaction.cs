@@ -15,15 +15,17 @@ namespace VTBpdfReportConverter.Models
         public DateOnly BankExecuteDate { get; }
         public double Amount { get; }
         public double Commission { get; }
+        public string Payee { get; }
         public string Memo { get; }
 
-        public Transaction(DateTime dateTime, DateOnly bankExecuteDate, double amount, double commission, string memo)
+        public Transaction(DateTime dateTime, DateOnly bankExecuteDate, double amount, double commission, string memo, string payee = "")
         {
             DateTime = dateTime;
             BankExecuteDate = bankExecuteDate;
             Amount = amount;
             Commission = commission;
             Memo = memo ?? throw new ArgumentNullException(nameof(memo));
+            Payee = payee;
         }
 
         public override string? ToString()
