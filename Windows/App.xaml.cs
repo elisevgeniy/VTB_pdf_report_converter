@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace VTBpdfReportConverter
+namespace WindowsApp
 {
     /// <summary>
     /// Interaction logic for App.xaml

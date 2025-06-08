@@ -1,4 +1,4 @@
-﻿namespace VTBpdfReportConverter.Models;
+﻿namespace ReportConverterLib.Models;
 
 public enum FormatType
 {

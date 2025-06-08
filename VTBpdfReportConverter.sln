@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTBpdfReportConverter", "VTBpdfReportConverter.csproj", "{ACAC8336-7B56-49B6-B500-5D147A413273}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows", "Windows\Windows.csproj", "{D2C8500E-6001-4D61-A0BF-3ABDF6986B30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportConverterLib", "ReportConverterLib\ReportConverterLib.csproj", "{2399643F-D9B4-4914-885D-A270A2616CBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ACAC8336-7B56-49B6-B500-5D147A413273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACAC8336-7B56-49B6-B500-5D147A413273}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACAC8336-7B56-49B6-B500-5D147A413273}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACAC8336-7B56-49B6-B500-5D147A413273}.Release|Any CPU.Build.0 = Release|Any CPU
+	    {D2C8500E-6001-4D61-A0BF-3ABDF6986B30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2C8500E-6001-4D61-A0BF-3ABDF6986B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2C8500E-6001-4D61-A0BF-3ABDF6986B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2C8500E-6001-4D61-A0BF-3ABDF6986B30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2399643F-D9B4-4914-885D-A270A2616CBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2399643F-D9B4-4914-885D-A270A2616CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2399643F-D9B4-4914-885D-A270A2616CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2399643F-D9B4-4914-885D-A270A2616CBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

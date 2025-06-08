@@ -1,16 +1,16 @@
 ﻿using System.IO;
 using System.Text;
-using Tabula.Extractors;
-using Tabula;
-using UglyToad.PdfPig;
-using VTBpdfReportConverter.Models;
 using System.Xml.Linq;
-using VTBpdfReportConverter.Exceptions;
-using Transaction = VTBpdfReportConverter.Models.Transaction;
+using Tabula;
+using Tabula.Extractors;
+using UglyToad.PdfPig;
+using ReportConverterLib.Exceptions;
+using ReportConverterLib.Models;
+using Transaction = ReportConverterLib.Models.Transaction;
 
-namespace VTBpdfReportConverter.Converter
+namespace ReportConverterLib.Converter
 {
-    internal class ReportConverter
+    public class ReportConverter
     {
         private Accaunt Accaunt { get; set; }
 

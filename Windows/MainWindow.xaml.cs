@@ -3,11 +3,11 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
-using VTBpdfReportConverter.Converter;
-using VTBpdfReportConverter.Exceptions;
-using VTBpdfReportConverter.Models;
+using ReportConverterLib.Converter;
+using ReportConverterLib.Exceptions;
+using ReportConverterLib.Models;
 
-namespace VTBpdfReportConverter
+namespace WindowsApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

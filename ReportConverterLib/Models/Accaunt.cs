@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Unicode;
 
-namespace VTBpdfReportConverter.Models
+namespace ReportConverterLib.Models
 {
     internal class Accaunt
     {
