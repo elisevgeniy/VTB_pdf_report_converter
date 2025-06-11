@@ -68,7 +68,7 @@ namespace ReportConverterLib.Converter
         {
             var result = new StringBuilder();
             var writer = new StringWriter(result);
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            using (var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("ru-RU")))
             {
                csv.WriteRecords(Accaunt.Transactions);
             }
