@@ -39,8 +39,10 @@ namespace WindowsApp
                     case FormatType.OFX:
                         result.AppendLine(reportConverter.GetOFX());
                         break;
-                    case FormatType.QIF:
                     case FormatType.CSV:
+                        result.AppendLine(reportConverter.GetCSV());
+                        break;
+                    case FormatType.QIF:
                         OutputLabel.Text = $"Формат {_formatType} ещё не поддерживается";
                         break;
                 }
@@ -53,8 +55,14 @@ namespace WindowsApp
 
                 if (cbFile.IsChecked ?? false)
                 {
-                    string format = "." + _formatType.ToString();
-                    string saveOfxToFile = reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", format));
+                    string format = "." + _formatType;
+                    string saveOfxToFile = _formatType switch
+                    {
+                        FormatType.OFX => reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", format)),
+                        FormatType.CSV => reportConverter.SaveCSVToFile(pdfFilepath.Replace(".pdf", format)),
+                        FormatType.QIF => throw new ArgumentOutOfRangeException(),
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
                     OutputLabel.Text = $"Файл в {format} формате сохранён по пути: {saveOfxToFile}";
                 }
             }
