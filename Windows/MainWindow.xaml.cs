@@ -26,35 +26,29 @@ namespace WindowsApp
             ResetUI();
             
             string pdfFilepath = Filepath.Text;
-            StringBuilder result = new StringBuilder();
 
             if (!File.Exists(pdfFilepath)) return;
+            
+            if (_formatType == FormatType.QIF) {
+                OutputLabel.Text = $"Формат {_formatType} ещё не поддерживается";
+                return;
+            }
             
             try
             {
                 ReportConverter reportConverter = new ReportConverter(pdfFilepath);
-
-                switch (_formatType)
-                {
-                    case FormatType.OFX:
-                        result.AppendLine(reportConverter.GetOFX());
-                        break;
-                    case FormatType.QIF:
-                    case FormatType.CSV:
-                        OutputLabel.Text = $"Формат {_formatType} ещё не поддерживается";
-                        break;
-                }
-
+                reportConverter.SetExportFormat(_formatType);
+                
                 if (cbOutput.IsChecked ?? false)
                 {
                     OutputTextBox.Visibility = Visibility.Visible;
-                    OutputTextBox.Text = result.ToString();
+                    OutputTextBox.Text = reportConverter.ConvertToString();
                 }
 
                 if (cbFile.IsChecked ?? false)
                 {
                     string format = "." + _formatType.ToString();
-                    string saveOfxToFile = reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", format));
+                    string saveOfxToFile = reportConverter.ConvertToFile(pdfFilepath.Replace(".pdf", format));
                     OutputLabel.Text = $"Файл в {format} формате сохранён по пути: {saveOfxToFile}";
                 }
             }
