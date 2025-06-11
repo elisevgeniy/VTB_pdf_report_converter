@@ -1,12 +1,9 @@
-﻿using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Xml.Linq;
-using CsvHelper;
+﻿using System.Text;
 using Tabula;
 using Tabula.Extractors;
 using UglyToad.PdfPig;
 using ReportConverterLib.Exceptions;
+using ReportConverterLib.Exporters;
 using ReportConverterLib.Models;
 using Transaction = ReportConverterLib.Models.Transaction;
 
@@ -14,88 +11,47 @@ namespace ReportConverterLib.Converter
 {
     public class ReportConverter
     {
-        private Accaunt Accaunt { get; set; }
+        private Account Account { get; set; }
 
         public ReportConverter(string pdfFilepath)
         {
             ReadPdfFile(pdfFilepath);
+            SetExportFormat(FormatType.OFX);
+        }
+        
+        private IExporter Exporter { get; set; }
+
+        public string ConvertToString()
+        {
+            return Exporter.ExportToString(Account);
+        }
+        
+        public string ConvertToFile(string path)
+        {
+            return Exporter.ExportToFile(path, Account);
         }
 
+        public void SetExportFormat(FormatType formatType)
+        {
+            Exporter = formatType switch
+            {
+                FormatType.OFX => new OFXExporter(),
+                FormatType.CSV => new CSVExporter(),
+                FormatType.QIF => throw new NotImplementedException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(formatType), formatType, null)
+            };
+        }
+        
         private void ReadPdfFile(string filepath)
         {
             using (PdfDocument document = PdfDocument.Open(filepath, new ParsingOptions() { ClipPaths = true }))
             {
-                Accaunt = ParseAccount(document);
-                Accaunt.Transactions.AddRange(ParseTransactions(document));
+                Account = ParseAccount(document);
+                Account.Transactions.AddRange(ParseTransactions(document));
             }
         }
-
-        public string GetOFX()
-        {
-            var output = new XDocument(
-                new XProcessingInstruction("OFX",
-                    "OFXHEADER=\"200\" VERSION=\"220\" SECURITY=\"NONE\" OLDFILEUID=\"NONE\" NEWFILEUID=\"NONE\""),
-                new XElement("OFX",
-                    new XElement("BANKMSGSRSV1",
-                        new XElement("STMTTRNRS",
-                            new XElement("STMTRS",
-                                new XElement("CURDEF", Accaunt.Currency),
-                                new XElement("BANKACCTFROM",
-                                    new XElement("BANKID", "VTB"),
-                                    new XElement("ACCTID", Accaunt.Number),
-                                    new XElement("ACCTTYPE", "UNKNOWN")
-                                ),
-                                new XElement("BANKTRANLIST",
-                                    from transaction in Accaunt.Transactions orderby transaction.DateTime
-                                    select new XElement("STMTTRN",
-                                        new XElement("DTPOSTED",
-                                            transaction.DateTime.ToString("yyyyMMddHHmmss")),
-                                        new XElement("TRNAMT", transaction.Amount),
-                                        new XElement("NAME", transaction.Payee),
-                                        new XElement("MEMO", transaction.Memo)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-
-            return output.ToString();
-        }
-
-        public string GetCSV()
-        {
-            var result = new StringBuilder();
-            var writer = new StringWriter(result);
-            using (var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("ru-RU")))
-            {
-               csv.WriteRecords(Accaunt.Transactions);
-            }
-            return result.ToString();
-        }
-
-        public string SaveOFXToFile(string ofxFilepath)
-        {
-            return SaveStringToFile(ofxFilepath, GetOFX());
-        }
-
-        public string SaveCSVToFile(string csvFilepath)
-        {            
-            return SaveStringToFile(csvFilepath, GetCSV());
-        }
-
-        private string SaveStringToFile(string filepath, string content)
-        {
-            using (var file = File.CreateText(filepath))
-            {
-                file.Write(content);
-            }
-            
-            return filepath;
-        }
-
-        private static Accaunt ParseAccount(PdfDocument document)
+     
+        private static Account ParseAccount(PdfDocument document)
         {
             try
             {
@@ -181,7 +137,7 @@ namespace ReportConverterLib.Converter
                     throw new ConvertException("Не удалось спарсить баланс");
                 }
 
-                return new Accaunt(FIO, accauntNumber, startPeriod, endPeriod, startBalance, endBalance, currency);
+                return new Account(FIO, accauntNumber, startPeriod, endPeriod, startBalance, endBalance, currency);
             }
             catch (Exception ex)
             {

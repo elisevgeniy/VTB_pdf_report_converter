@@ -4,7 +4,7 @@ using System.Text.Unicode;
 
 namespace ReportConverterLib.Models
 {
-    internal class Accaunt
+    internal class Account
     {
         public string Owner { get; }
         public decimal Number { get; }
@@ -16,7 +16,7 @@ namespace ReportConverterLib.Models
 
         public List<Transaction> Transactions { get; }
 
-        public Accaunt(string owner, decimal number, DateOnly periodStart, DateOnly periodEnd, double balanceAtStart, double balanceAtEnd, string currency)
+        public Account(string owner, decimal number, DateOnly periodStart, DateOnly periodEnd, double balanceAtStart, double balanceAtEnd, string currency)
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             Number = number;
