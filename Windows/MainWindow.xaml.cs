@@ -26,43 +26,29 @@ namespace WindowsApp
             ResetUI();
             
             string pdfFilepath = Filepath.Text;
-            StringBuilder result = new StringBuilder();
 
             if (!File.Exists(pdfFilepath)) return;
+            
+            if (_formatType == FormatType.QIF) {
+                OutputLabel.Text = $"Формат {_formatType} ещё не поддерживается";
+                return;
+            }
             
             try
             {
                 ReportConverter reportConverter = new ReportConverter(pdfFilepath);
-
-                switch (_formatType)
-                {
-                    case FormatType.OFX:
-                        result.AppendLine(reportConverter.GetOFX());
-                        break;
-                    case FormatType.CSV:
-                        result.AppendLine(reportConverter.GetCSV());
-                        break;
-                    case FormatType.QIF:
-                        OutputLabel.Text = $"Формат {_formatType} ещё не поддерживается";
-                        break;
-                }
-
+                reportConverter.SetExportFormat(_formatType);
+                
                 if (cbOutput.IsChecked ?? false)
                 {
                     OutputTextBox.Visibility = Visibility.Visible;
-                    OutputTextBox.Text = result.ToString();
+                    OutputTextBox.Text = reportConverter.ConvertToString();
                 }
 
                 if (cbFile.IsChecked ?? false)
                 {
-                    string format = "." + _formatType;
-                    string saveOfxToFile = _formatType switch
-                    {
-                        FormatType.OFX => reportConverter.SaveOFXToFile(pdfFilepath.Replace(".pdf", format)),
-                        FormatType.CSV => reportConverter.SaveCSVToFile(pdfFilepath.Replace(".pdf", format)),
-                        FormatType.QIF => throw new ArgumentOutOfRangeException(),
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
+                    string format = "." + _formatType.ToString();
+                    string saveOfxToFile = reportConverter.ConvertToFile(pdfFilepath.Replace(".pdf", format));
                     OutputLabel.Text = $"Файл в {format} формате сохранён по пути: {saveOfxToFile}";
                 }
             }
