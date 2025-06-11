@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Xml.Linq;
+using CsvHelper;
 using Tabula;
 using Tabula.Extractors;
 using UglyToad.PdfPig;
@@ -62,16 +64,35 @@ namespace ReportConverterLib.Converter
             return output.ToString();
         }
 
+        public string GetCSV()
+        {
+            var result = new StringBuilder();
+            var writer = new StringWriter(result);
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+               csv.WriteRecords(Accaunt.Transactions);
+            }
+            return result.ToString();
+        }
+
         public string SaveOFXToFile(string ofxFilepath)
         {
-            var output = GetOFX();
+            return SaveStringToFile(ofxFilepath, GetOFX());
+        }
 
-            using (var file = File.CreateText(ofxFilepath))
+        public string SaveCSVToFile(string csvFilepath)
+        {            
+            return SaveStringToFile(csvFilepath, GetCSV());
+        }
+
+        private string SaveStringToFile(string filepath, string content)
+        {
+            using (var file = File.CreateText(filepath))
             {
-                file.Write(output);
+                file.Write(content);
             }
             
-            return ofxFilepath;
+            return filepath;
         }
 
         private static Accaunt ParseAccount(PdfDocument document)
