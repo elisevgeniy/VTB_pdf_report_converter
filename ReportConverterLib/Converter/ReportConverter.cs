@@ -217,11 +217,56 @@ namespace ReportConverterLib.Converter
             payee = "";
             if (memo.StartsWith("Оплата товаров и услуг. "))
             {
-                var payeeRange = new Range(24, memo.Replace("\r_\r"," ").Replace("\r"," ").IndexOf("по карте"));
+                var payeeRange = new Range(24, CleanMemo(memo).IndexOf("по карте"));
                 payee = memo[payeeRange].Trim().Replace("\r"," ");
                 return true;
             }
+            if (memo.StartsWith("Перевод между своими счетам"))
+            {
+                payee = "Перевод между своими счетам";
+                return true;
+            }
+            if (memo.StartsWith("Переводы через СБП"))
+            {
+                payee = CleanMemo(memo).Replace("Переводы через СБП. ", "");
+                return true;
+            }
+            if (memo.StartsWith("Поступление заработной платы"))
+            {
+                payee = "Поступление заработной платы";
+                return true;
+            }
+            if (memo.StartsWith("Внесение наличных через ATM"))
+            {
+                payee = "Внесение наличных через ATM";
+                return true;
+            }
+            if (memo.StartsWith("Снятие наличных в банкомате"))
+            {
+                payee = "Снятие наличных в банкомате";
+                return true;
+            }
+            if (memo.StartsWith("Операции по кредитам"))
+            {
+                payee = CleanMemo(memo).Replace("Операции по кредитам", "");
+                return true;
+            }
+            if (memo.StartsWith("Зачисление перевода"))
+            {
+                payee = CleanMemo(memo).Replace("Зачисление перевода", "");
+                return true;
+            }
+            if (memo.StartsWith("Платежи клиентов в другие банки"))
+            {
+                payee = CleanMemo(memo).Replace("Платежи клиентов в другие банки", "");
+                return true;
+            }
             return false;
+        }
+
+        private static string CleanMemo(string memo)
+        {
+            return memo.Replace(". . ", "").Replace("\r_\r", " ").Replace("\r", " ");
         }
     }
 }
