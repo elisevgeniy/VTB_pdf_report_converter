@@ -215,9 +215,10 @@ namespace ReportConverterLib.Converter
         private static bool TryParsePayee(string memo, out string payee)
         {
             payee = "";
+            memo = CleanMemo(memo);
             if (memo.StartsWith("Оплата товаров и услуг. "))
             {
-                var payeeRange = new Range(24, CleanMemo(memo).IndexOf("по карте"));
+                var payeeRange = new Range(24, memo.IndexOf("по карте"));
                 payee = memo[payeeRange].Trim().Replace("\r"," ");
                 return true;
             }
@@ -228,7 +229,17 @@ namespace ReportConverterLib.Converter
             }
             if (memo.StartsWith("Переводы через СБП"))
             {
-                payee = CleanMemo(memo).Replace("Переводы через СБП. ", "");
+                payee = memo.Replace("Переводы через СБП. ", "").Replace("Переводы через СБП", "");
+                return true;
+            }
+            if (memo.StartsWith("Денежный перевод"))
+            {
+                payee = memo.Replace("Денежный перевод. ", "").Replace("Денежный перевод", "");
+                return true;
+            }
+            if (memo.StartsWith("Внутри ВТБ"))
+            {
+                payee = memo.Replace("Внутри ВТБ. ", "").Replace("Внутри ВТБ", "");
                 return true;
             }
             if (memo.StartsWith("Поступление заработной платы"))
@@ -248,17 +259,22 @@ namespace ReportConverterLib.Converter
             }
             if (memo.StartsWith("Операции по кредитам"))
             {
-                payee = CleanMemo(memo).Replace("Операции по кредитам", "");
+                payee = memo.Replace("Операции по кредитам", "");
                 return true;
             }
             if (memo.StartsWith("Зачисление перевода"))
             {
-                payee = CleanMemo(memo).Replace("Зачисление перевода", "");
+                payee = memo.Replace("Зачисление перевода", "");
                 return true;
             }
             if (memo.StartsWith("Платежи клиентов в другие банки"))
             {
-                payee = CleanMemo(memo).Replace("Платежи клиентов в другие банки", "");
+                payee = memo.Replace("Платежи клиентов в другие банки", "");
+                return true;
+            }
+            if (memo.StartsWith("Зачисление кешбэка по программе лояльности"))
+            {
+                payee = "Кешбэк";
                 return true;
             }
             return false;
