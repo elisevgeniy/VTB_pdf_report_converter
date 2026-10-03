@@ -61,7 +61,7 @@ namespace ReportConverterLib.Converter
 
                 string FIO = "";
                 StringBuilder sb = new StringBuilder();
-                while (!words[words_index].Text.Equals("Номер"))
+                while (!words[words_index].Text.Equals("Контракт"))
                 {
                     sb.Append(words[words_index].Text + " ");
                     words_index++;
@@ -71,7 +71,7 @@ namespace ReportConverterLib.Converter
 
 
                 decimal accauntNumber;
-                while (!words[words_index].Text.Equals("счёта"))
+                while (!words[words_index].Text.Equals("карты"))
                 {
                     words_index++;
                 }
@@ -97,7 +97,7 @@ namespace ReportConverterLib.Converter
                 string startStr = words[words_index].Text;
                 words_index += 2;
                 string endStr = words[words_index].Text;
-                if (DateOnly.TryParse(startStr, out DateOnly start) && DateOnly.TryParse(endStr, out DateOnly end))
+                if (DateOnly.TryParseExact(startStr, "dd.mm.yyyy", out DateOnly start) && DateOnly.TryParseExact(endStr, "dd.mm.yyyy", out DateOnly end))
                 {
                     startPeriod = start;
                     endPeriod = end;
@@ -174,19 +174,16 @@ namespace ReportConverterLib.Converter
 
                     for (; r < table.RowCount; r++)
                     {
-                        if (
-                            DateTime.TryParse(table[r, 0].ToString().Replace("\r", " ").Replace('.', '-'),
-                                out DateTime dateTime) &&
-                            DateOnly.TryParse(table[r, 1].ToString(), out DateOnly bankExecuteDate) &&
-                            double.TryParse(
-                                table[r, 2].ToString().Replace(" RUB", "").Replace(",", "").Replace('.', ','),
-                                out double amount) &&
-                            double.TryParse(
-                                table[r, 5].ToString().Replace(" RUB", "").Replace(",", "").Replace('.', ','),
-                                out double commission)
-                        )
+                        try
                         {
-                            string memo = table[r, 6].ToString();
+                            DateTime dateTime = DateTime.ParseExact(table[r, 0].ToString().Replace("\r", " "),
+                               "dd.MM.yyyy HH:mm:ss",
+                                    System.Globalization.CultureInfo.InvariantCulture, 0);
+                            DateOnly bankExecuteDate = DateOnly.ParseExact(table[r, 1].ToString(), "dd.mm.yyyy");
+                            double amount = double.Parse(table[r, 3].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                            double commission = double.Parse(table[r, 4].ToString().Replace(" RUB", ""), System.Globalization.CultureInfo.InvariantCulture);
+
+                            string memo = table[r, 5].ToString();
                             if (TryParsePayee(memo, out string payee))
                             {
                                 transactions.Add(new Transaction(dateTime, bankExecuteDate, amount, commission, memo, payee));
@@ -195,11 +192,10 @@ namespace ReportConverterLib.Converter
                             {
                                 transactions.Add(new Transaction(dateTime, bankExecuteDate, amount, commission, memo));
                             }
-                            
                         }
-                        else
+			catch (Exception e)
                         {
-                            throw new ConvertException($"Transaction parse error, page {i}, row {r}");
+                            throw new ConvertException($"Ошибка парсинга транзакции, страница {i}, строка {r}: {e}");
                         }
                     }
                 }
@@ -218,7 +214,7 @@ namespace ReportConverterLib.Converter
             memo = CleanMemo(memo);
             if (memo.StartsWith("Оплата товаров и услуг. "))
             {
-                var payeeRange = new Range(24, memo.IndexOf("по карте"));
+                var payeeRange = new Range(24, memo.LastIndexOf("."));
                 payee = memo[payeeRange].Trim().Replace("\r"," ");
                 return true;
             }
